@@ -101,7 +101,12 @@ tinggi status/nav bar (beda tiap HP & versi OS).
   Tujuan: item terakhir & tombol **tidak pernah** ketutup bilah bawah. Uji di HP Android bernavigasi
   gesture **dan** 3-tombol (tinggi berbeda).
 
-### Tipografi
+### Keyboard (input jangan tertutup keyboard)
+Layar berisi input (esai/isian) di ScrollView: saat keyboard terbuka, kolom jawaban bisa tertutup.
+Fix **OTA-safe** (JANGAN `KeyboardAvoidingView` — [[afresto-next-ui-mobile-konvensi]] — & JANGAN lib
+native seperti keyboard-controller → butuh rebuild/CRASH lewat OTA): pakai **`useKeyboardHeight()`**
+(sudah ada di `components/FormKit`) → `contentContainerStyle={{ paddingBottom: 40 + kb }}` +
+`keyboardShouldPersistTaps="handled"`. Terbukti di layar Latihan & Perbaikan.
 - Mobile: **Sora hanya untuk ≥18sp** (judul & angka besar). Teks tubuh/label = **font sistem**
   (lebih cepat, akrab). Family & bobot sudah DIPASANGKAN di `type` — jangan campur sendiri.
 - Web: sistem/Inter. Judul `font-semibold text-slate-800`.
@@ -129,6 +134,15 @@ tinggi status/nav bar (beda tiap HP & versi OS).
    navigasi bawah Android (dan home indicator iOS). Terbukti nyata. ➡️ Semua sheet/picker/modal & CTA
    bawah WAJIB tambah `insets.bottom` via `useSafeAreaInsets` (lihat §3 "Safe area"). Jangan hardcode
    tinggi nav bar — beda-beda per HP. Bug ini **tak muncul di simulator/HP tertentu** → uji lintas HP.
+8. **🔒 Penyimpanan lokal per-SISWA di HP WAJIB di-scope `uid`.** HP sekolah dipakai bergantian →
+   draft/jawaban/hasil yang disimpan per-ID-konten SAJA (tanpa uid) **bocor ke akun berikutnya**
+   (siswa B lihat/kirim jawaban siswa A). Terbukti (latihan). ➡️ Kunci AsyncStorage `...:<uid>:<id>`;
+   konten bersama (soal/materi) boleh global, tapi apa pun MILIK siswa scope uid. Audit semua AsyncStorage.
+9. **UI Daftar Nilai/Koreksi: hitung per-SISWA, tampilkan nilai LIVE.** (a) Ringkasan "menunggu koreksi"
+   sebut **jumlah SISWA**, bukan jumlah jawaban (guru berpikir per-anak). (b) Setelah AI mengusulkan skor
+   per butir, tampilkan **perkiraan nilai 0-100 LANGSUNG** (badge "≈") dari skor di layar — jangan paksa
+   guru menekan Terapkan dulu baru nilai muncul. (c) Data "hantu" (mis. remedial lama tak bisa dikoreksi)
+   jangan dihitung → saring ke yang benar-benar actionable.
 
 ---
 
