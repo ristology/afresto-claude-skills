@@ -1,24 +1,49 @@
 # afresto-claude-skills
 
-Marketplace plugin **privat** untuk skill Claude Code yang dipakai BERSAMA lintas repo Afresto
+Marketplace plugin **publik** untuk skill Claude Code yang dipakai **BERSAMA** lintas repo Afresto
 (projectTwo & afresto-next-mobile) — satu sumber, satu standar.
 
+> **Publik = baca-saja untuk umum.** Siapa pun boleh `clone`, tapi hak tulis tetap milik
+> owner/collaborator. Isinya hanya panduan sistem desain (tanpa token/rahasia). Repo dibuat
+> publik supaya tim tak perlu diundang satu-satu untuk memakainya.
+
 ## Isi
-- `afresto-shared` -> skill `desain-afresto` (sistem desain Ocean, web + mobile).
+- `afresto-shared` → skill `desain-afresto` (sistem desain **Ocean**, web + mobile).
 
-Skill khas satu repo (deploy, db-change, penilaian, mobile) TIDAK di sini — tinggal di
-`.claude/skills/` repo masing-masing.
+Skill khas satu repo (`afresto-deploy`, `afresto-db-change`, `afresto-penilaian`, `afresto-mobile`)
+**TIDAK di sini** — mereka tinggal di `.claude/skills/` repo masing-masing dan ikut otomatis saat `git pull`
+(jalan di ekstensi VS Code maupun CLI, tanpa setup tambahan).
 
-## Cara tim memasang (sekali per orang)
+## ⚠️ Penting: skill dari marketplace butuh CLI
+`/plugin` (manajemen marketplace) **hanya tersedia di Claude Code CLI (terminal)** — **bukan** di
+ekstensi VS Code. Jadi `desain-afresto` hanya termuat kalau pakai CLI. Skill repo di atas tetap
+jalan di ekstensi.
+
+## Onboarding tim (sekali per orang)
+1. Pasang **Node.js** (kalau belum), lalu pasang CLI:
+   ```
+   npm i -g @anthropic-ai/claude-code
+   ```
+2. `clone`/`pull` repo kerja (mis. `next`), buka terminal, `cd` ke folder repo, jalankan:
+   ```
+   claude
+   ```
+3. Saat muncul **"Trust marketplace afresto?"** → pilih **ya**.
+   (Otomatis karena repo kerja memuat `extraKnownMarketplaces` + `enabledPlugins` di `.claude/settings.json`.)
+4. Kalau tab **Errors** sempat menampilkan **"Plugin afresto-shared not cached"** (error basi saat pertama):
+   ketik **`/exit`**, lalu buka **`claude`** lagi → error hilang.
+5. Verifikasi: ketik **`/skills`** → pastikan skill repo (`afresto-*`) **dan** `desain-afresto` muncul.
+
+Pasang manual (kalau auto tak jalan):
 ```
 /plugin marketplace add ristology/afresto-claude-skills
 /plugin install afresto-shared@afresto
 /reload-plugins
 ```
-Atau otomatis: repo projectTwo & mobile memuat `extraKnownMarketplaces` + `enabledPlugins`
-di `.claude/settings.json` -> tim ditawari pasang saat clone & trust folder.
-
 Dipanggil: `/afresto-shared:desain-afresto`.
 
-## Update
-Naikkan `version` di `marketplace.json` & `plugin.json`, lalu tim: `/plugin marketplace update afresto` -> `/reload-plugins`. Perubahan lewat PR.
+## Update skill
+1. Edit `plugins/afresto-shared/skills/desain-afresto/SKILL.md` (sumber tunggal).
+2. Naikkan `version` di `.claude-plugin/marketplace.json` **dan** `plugins/afresto-shared/.claude-plugin/plugin.json`.
+3. Commit + push (perubahan sebaiknya lewat **PR**).
+4. Tim ambil versi baru: `/plugin marketplace update afresto` → `/reload-plugins`.
