@@ -1,4 +1,4 @@
-# Ganti Edit
+# afresto-claude-skills
 
 Marketplace plugin **publik** untuk skill Claude Code yang dipakai **BERSAMA** lintas repo Afresto
 (projectTwo & afresto-next-mobile) — satu sumber, satu standar.
